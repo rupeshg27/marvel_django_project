@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="card my-3">
+    <div class="card-header">
+        <h5>{{ tweet.user.username }}</h5>
+    </div>
+    <div class="card-body">
+        <p>{{ tweet.text }}</p>
+        {% if tweet.image %}
+        <img src="{{ tweet.image.url }}" alt="Tweet image" class="img-fluid">
+        {% endif %}
+        <p class="text-muted">Posted on {{ tweet.created_at }}</p>
+    </div>
+</div>
+<a href="{% url 'tweet_list' %}" class="btn btn-primary">Back to All Tweets</a>
+{% endblock %}

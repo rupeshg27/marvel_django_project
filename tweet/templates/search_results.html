@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+{% if results %}
+    <ul class="list-group">
+        {% for tweet in results %}
+        <li class="list-group-item">
+            <a href="{% url 'tweet_detail' tweet.id %}">
+                <strong>{{ tweet.user.username }}</strong>: {{ tweet.text }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found for "{{ query }}".</p>
+{% endif %}
+{% endblock %}

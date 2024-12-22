@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Avenger aur Tweet
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center mt-4">Welcome to Avenger's Django Project</h1>
+
+<a class="btn btn-primary mb-4" href="{% url 'tweet_create' %}">Create a tweet</a>
+<div class="container row gap-3">
+    {% for tweet in tweets %}
+    <div class="card" style="width: 18rem;">
+        {% if tweet.photo %}
+        <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Tweet Image">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ tweet.user.username }}</h5>
+            <p class="card-text">{{ tweet.text }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <button 
+              class="btn btn-outline-danger like-btn" 
+              data-id="{{ tweet.id }}" 
+              data-liked="{{ tweet.liked_by_user }}">
+              <i class="fa{% if tweet.liked_by_user %}-solid{% else %}-regular{% endif %} fa-heart"></i>
+          </button>          
+                <span id="like-count-{{ tweet.id }}">{{ tweet.total_likes }}</span> Likes
+            </div>
+            {% if tweet.user == user %}
+            <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const likeButtons = document.querySelectorAll('.like-btn');
+
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tweetId = this.getAttribute('data-id');
+                const isLiked = this.getAttribute('data-liked') === 'True';
+                
+                // Toggle the like status
+                this.setAttribute('data-liked', !isLiked);
+
+                // Send the request to like/unlike the tweet
+                fetch(`/tweets/${tweetId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        'liked': !isLiked
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update like count
+                    document.getElementById(`like-count-${tweetId}`).innerText = data.likes_count;
+
+                    // Toggle the heart icon
+                    const icon = this.querySelector('i');
+                    if (isLiked) {
+                        icon.classList.remove('fa-solid');
+                        icon.classList.add('fa-regular');
+                    } else {
+                        icon.classList.remove('fa-regular');
+                        icon.classList.add('fa-solid');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>
+{% endblock %}
+
