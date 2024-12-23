@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-=lzgv5$x^ost5!@$0#mkr-vj32$!kh%s*1)n+jc+g0!*kg-sd$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'marvel-django-project-2.onrender.com']
+
 
 
 # Application definition
@@ -134,3 +135,4 @@ LOGIN_URL = '/accounts/login'
 
 LOGIN_REDIRECT_URL = '/tweet/'
 LOGOUT_REDIRECT_URL = '/tweet/'
+
