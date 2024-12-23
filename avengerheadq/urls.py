@@ -18,9 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth.urls import views as auth_views
+from django.http import HttpResponse
+from django.shortcuts import redirect
+
+# Example root view function
+def home(request):
+    return HttpResponse("Welcome to the Marvel Django Project!")  # Simple response for root URL
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', lambda request: redirect('tweet_list')),  # Redirect root to `tweet_list`
     path('tweet/', include('tweet.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
